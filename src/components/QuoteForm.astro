@@ -1,0 +1,101 @@
+---
+interface Props {
+  formName: string;
+  idPrefix: string;
+  heading: string;
+  badge?: string;
+  services: string[];
+  detailed?: boolean;
+}
+
+const { formName, idPrefix, heading, badge, services, detailed = false } = Astro.props;
+const inputClass =
+  'w-full rounded-lg border border-brand-blue-800 bg-slate-950 px-4 py-3 text-slate-100 placeholder-slate-500 focus:border-brand-blue-400 focus:outline-none focus:ring-1 focus:ring-brand-blue-400';
+---
+
+<div class={`rounded-2xl border border-brand-blue-800 ${detailed ? 'bg-slate-950' : 'bg-slate-900'} p-6 sm:p-8 shadow-2xl`}>
+  <div class="flex items-center justify-between mb-2">
+    <h2 class="text-2xl font-bold text-white">{heading}</h2>
+    {badge && (
+      <span class="rounded-full bg-brand-green-400/10 px-3 py-1 text-xs font-bold text-brand-green-400">
+        {badge}
+      </span>
+    )}
+  </div>
+  <p class="text-slate-400 mb-6">
+    Tell us a little about the job — we'll call you back with a straight answer, fast.
+  </p>
+
+  <form name={formName} method="POST" data-netlify="true" data-netlify-honeypot="bot-field" action="/" class="space-y-4">
+    <input type="hidden" name="form-name" value={formName} />
+    <p class="hidden">
+      <label>
+        Don't fill this out if you're human: <input name="bot-field" />
+      </label>
+    </p>
+
+    <div>
+      <label for={`${idPrefix}-name`} class="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+      <input id={`${idPrefix}-name`} type="text" name="name" required class={inputClass} placeholder="John Murphy" />
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-4">
+      <div>
+        <label for={`${idPrefix}-phone`} class="block text-sm font-medium text-slate-300 mb-1">Phone Number</label>
+        <input id={`${idPrefix}-phone`} type="tel" name="phone" required class={inputClass} placeholder="087 123 4567" />
+      </div>
+      {detailed ? (
+        <div>
+          <label for={`${idPrefix}-email`} class="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+          <input id={`${idPrefix}-email`} type="email" name="email" required class={inputClass} placeholder="you@email.com" />
+        </div>
+      ) : (
+        <div>
+          <label for={`${idPrefix}-location`} class="block text-sm font-medium text-slate-300 mb-1">Site Location</label>
+          <input id={`${idPrefix}-location`} type="text" name="location" required class={inputClass} placeholder="Naas, Co. Kildare" />
+        </div>
+      )}
+    </div>
+
+    {detailed && (
+      <div>
+        <label for={`${idPrefix}-location`} class="block text-sm font-medium text-slate-300 mb-1">Site Address</label>
+        <input id={`${idPrefix}-location`} type="text" name="location" required class={inputClass} placeholder="Site address / eircode" />
+      </div>
+    )}
+
+    <div>
+      <label for={`${idPrefix}-service`} class="block text-sm font-medium text-slate-300 mb-1">
+        {detailed ? 'Service Required' : 'What do you need done?'}
+      </label>
+      <select id={`${idPrefix}-service`} name="service" required class={inputClass}>
+        <option value="">Select a service</option>
+        {services.map((s) => <option value={s}>{s}</option>)}
+        <option value="Not Sure / Other">Not Sure / Other</option>
+      </select>
+    </div>
+
+    {detailed && (
+      <div>
+        <label for={`${idPrefix}-details`} class="block text-sm font-medium text-slate-300 mb-1">Tell us about the job</label>
+        <textarea
+          id={`${idPrefix}-details`}
+          name="details"
+          rows="4"
+          class={inputClass}
+          placeholder="Project size, access, timeline, or anything else that helps us quote accurately..."
+        ></textarea>
+      </div>
+    )}
+
+    <button
+      type="submit"
+      class="w-full rounded-lg bg-brand-blue-400 px-6 py-4 text-lg font-bold text-slate-950 hover:bg-brand-blue-300 transition-colors shadow-lg shadow-brand-blue-400/20"
+    >
+      {detailed ? 'Request My Detailed Quote →' : 'Get My Free Quote →'}
+    </button>
+    <p class="text-xs text-center text-slate-500">
+      🔒 {detailed ? 'Your details are never shared. Fully insured, no-obligation quote.' : 'Fully insured. We reply within 24 hours, guaranteed.'}
+    </p>
+  </form>
+</div>

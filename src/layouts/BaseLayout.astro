@@ -1,0 +1,140 @@
+---
+import '../styles/global.css';
+import { PHONE_DISPLAY, PHONE_TEL, SITE_URL, coverageAreas, EMAIL } from '../consts';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath: string;
+}
+
+const { title, description, canonicalPath } = Astro.props;
+const canonicalUrl = new URL(canonicalPath, SITE_URL).toString();
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: 'G Construction',
+  telephone: '+353879399373',
+  url: canonicalUrl,
+  areaServed: coverageAreas.map((area) => ({ '@type': 'AdministrativeArea', name: area })),
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <title>{title}</title>
+    <link rel="icon" type="image/png" href="/logo-g-con.png" />
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)} />
+    <slot name="head" />
+  </head>
+  <body class="bg-slate-950 text-slate-100 antialiased pb-20 md:pb-0">
+    <!-- ============ TOP STEEL-BLUE STRIP ============ -->
+    <div class="bg-brand-blue-400 text-slate-950 text-xs sm:text-sm font-semibold">
+      <div
+        class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-center"
+      >
+        <span>Fully Insured • Free Site Visit • Fixed-Price Quotes</span>
+        <span class="hidden sm:inline">|</span>
+        <a href={`tel:${PHONE_TEL}`} class="underline underline-offset-2 hover:no-underline">
+          Call {PHONE_DISPLAY}
+        </a>
+      </div>
+    </div>
+
+    <!-- ============ HEADER ============ -->
+    <header class="sticky top-0 z-40 bg-slate-950/95 backdrop-blur border-b border-brand-blue-900">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+        <a href="/" class="flex items-center gap-3">
+          <img src="/logo-g-con.png" alt="G Construction logo" class="h-14 w-14 sm:h-16 sm:w-16 object-contain rounded" />
+          <span class="text-lg sm:text-2xl font-extrabold tracking-tight text-white">
+            G Construction
+          </span>
+        </a>
+        <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-300">
+          <a href="/" class="hover:text-brand-blue-400 transition-colors">Home</a>
+          <a href="/groundworks" class="hover:text-brand-blue-400 transition-colors">Groundworks</a>
+        </nav>
+        <div class="flex items-center gap-2 sm:gap-3">
+          <a
+            href={`tel:${PHONE_TEL}`}
+            class="hidden sm:inline-flex items-center gap-2 rounded-lg border border-brand-blue-800 px-4 py-2 text-sm font-semibold text-brand-blue-400 hover:border-brand-blue-400 transition-colors"
+          >
+            📞 {PHONE_DISPLAY}
+          </a>
+          <a
+            href="#quick-quote"
+            class="inline-flex items-center gap-2 rounded-lg bg-brand-blue-400 px-4 py-2 text-sm sm:text-base font-bold text-slate-950 hover:bg-brand-blue-300 transition-colors shadow-lg shadow-brand-blue-400/20"
+          >
+            Get Free Quote
+          </a>
+        </div>
+      </div>
+      <nav class="md:hidden flex items-center justify-center gap-6 text-sm font-semibold text-slate-300 border-t border-brand-blue-900 py-2">
+        <a href="/" class="hover:text-brand-blue-400 transition-colors">Home</a>
+        <a href="/groundworks" class="hover:text-brand-blue-400 transition-colors">Groundworks</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="border-t border-brand-blue-900 bg-slate-950">
+      <div class="max-w-7xl mx-auto px-4 py-12 grid sm:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <img src="/logo-g-con.png" alt="G Construction logo" class="h-10 w-10 object-contain rounded" />
+            <span class="text-lg font-extrabold text-white">G Construction</span>
+          </div>
+          <p class="text-sm text-slate-500">
+            Extensions, garden rooms, renovations and groundworks across Kildare, South Dublin, Offaly
+            and Laois.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-brand-blue-400 mb-3">Contact</h3>
+          <ul class="space-y-2 text-sm text-slate-400">
+            <li>
+              📞 <a href={`tel:${PHONE_TEL}`} class="hover:text-brand-blue-400">{PHONE_DISPLAY}</a>
+            </li>
+            <li>
+              ✉️ <a href={`mailto:${EMAIL}`} class="hover:text-brand-blue-400">{EMAIL}</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-bold uppercase tracking-wider text-brand-blue-400 mb-3">Coverage</h3>
+          <ul class="space-y-2 text-sm text-slate-400">
+            {coverageAreas.map((area) => (
+              <li>{area}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div class="border-t border-brand-blue-900 py-6 text-center text-xs text-slate-600">
+        © {new Date().getFullYear()} G Construction. All rights reserved. Fully insured & certified.
+      </div>
+    </footer>
+
+    <!-- ============ MOBILE STICKY CTA ============ -->
+    <div class="fixed bottom-0 inset-x-0 z-50 md:hidden border-t border-brand-blue-300 bg-brand-blue-400 shadow-2xl">
+      <a
+        href={`tel:${PHONE_TEL}`}
+        class="flex items-center justify-center gap-2 px-4 py-4 text-base font-bold text-slate-950"
+      >
+        📞 Call Now: {PHONE_DISPLAY}
+      </a>
+    </div>
+
+    <slot name="scripts" />
+  </body>
+</html>

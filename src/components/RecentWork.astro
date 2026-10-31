@@ -1,0 +1,27 @@
+---
+interface Props {
+  prefix: string;
+  count?: number;
+}
+
+const { prefix, count = 6 } = Astro.props;
+const slots = Array.from({ length: count }, (_, i) => `work/${prefix}-${i + 1}.jpg`);
+---
+
+<section id="recent-work" class="max-w-7xl mx-auto px-4 py-16 sm:py-24">
+  <div class="text-center max-w-2xl mx-auto mb-12">
+    <span class="text-sm font-bold uppercase tracking-wider text-brand-blue-400">Recent Work</span>
+    <h2 class="mt-3 text-3xl sm:text-4xl font-extrabold text-white">See the Finished Job</h2>
+    <p class="mt-4 text-slate-400">Photos from real jobs, added as they're completed.</p>
+  </div>
+
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+    {slots.map((path) => (
+      <div class="aspect-square rounded-xl border-2 border-dashed border-brand-blue-800 bg-slate-900/50 flex flex-col items-center justify-center gap-2 text-center p-4">
+        <span class="text-3xl" aria-hidden="true">📷</span>
+        <span class="text-sm text-slate-500">Photo coming soon</span>
+        <code class="text-[11px] text-slate-600 break-all">public/{path}</code>
+      </div>
+    ))}
+  </div>
+</section>

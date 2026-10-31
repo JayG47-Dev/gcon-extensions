@@ -1,0 +1,4 @@
+# Old groundworks subdomain -> new /groundworks page on the main site.
+# Only takes effect once groundworks.gconstruction.ie is added as a domain
+# alias on THIS Netlify site (see deployment notes).
+https://groundworks.gconstruction.ie/*  https://gconstruction.ie/groundworks  301!
