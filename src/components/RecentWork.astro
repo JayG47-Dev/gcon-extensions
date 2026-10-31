@@ -2,10 +2,14 @@
 interface Props {
   prefix: string;
   count?: number;
+  provided?: number;
 }
 
-const { prefix, count = 6 } = Astro.props;
-const slots = Array.from({ length: count }, (_, i) => `work/${prefix}-${i + 1}.jpg`);
+const { prefix, count = 6, provided = 0 } = Astro.props;
+const slots = Array.from({ length: count }, (_, i) => ({
+  path: `work/${prefix}-${i + 1}.jpg`,
+  filled: i < provided,
+}));
 ---
 
 <section id="recent-work" class="max-w-7xl mx-auto px-4 py-16 sm:py-24">
@@ -16,12 +20,18 @@ const slots = Array.from({ length: count }, (_, i) => `work/${prefix}-${i + 1}.j
   </div>
 
   <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-    {slots.map((path) => (
-      <div class="aspect-square rounded-xl border-2 border-dashed border-brand-blue-800 bg-slate-900/50 flex flex-col items-center justify-center gap-2 text-center p-4">
-        <span class="text-3xl" aria-hidden="true">📷</span>
-        <span class="text-sm text-slate-500">Photo coming soon</span>
-        <code class="text-[11px] text-slate-600 break-all">public/{path}</code>
-      </div>
-    ))}
+    {slots.map((slot) =>
+      slot.filled ? (
+        <div class="aspect-square rounded-xl overflow-hidden border border-brand-blue-800">
+          <img src={`/${slot.path}`} alt="G Construction completed job" class="w-full h-full object-cover" loading="lazy" />
+        </div>
+      ) : (
+        <div class="aspect-square rounded-xl border-2 border-dashed border-brand-blue-800 bg-slate-900/50 flex flex-col items-center justify-center gap-2 text-center p-4">
+          <span class="text-3xl" aria-hidden="true">📷</span>
+          <span class="text-sm text-slate-500">Photo coming soon</span>
+          <code class="text-[11px] text-slate-600 break-all">public/{slot.path}</code>
+        </div>
+      )
+    )}
   </div>
 </section>
