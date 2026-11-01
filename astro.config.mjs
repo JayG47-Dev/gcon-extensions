@@ -4,5 +4,10 @@ import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://gconstruction.ie',
-  integrations: [tailwind(), sitemap()],
+  integrations: [
+    tailwind(),
+    sitemap({
+      filter: (page) => !page.includes('/thank-you'),
+    }),
+  ],
 });
